@@ -96,6 +96,8 @@ class Scanner {
             }
             case ' ', '\r', '\t' -> {
             }
+            case '\n' ->
+                line++;
             default ->
                 Main.error(line, "Unexpected character: " + c);
         }
