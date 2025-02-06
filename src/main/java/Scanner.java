@@ -46,6 +46,26 @@ class Scanner {
         }
     }
 
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') {
+                line++;
+            }
+            advance();
+        }
+
+        if (isAtEnd()) {
+            Main.error(line, "Unterminated string.");
+            return;
+        }
+
+        // The closing ".
+        advance();
+
+        String text = source.substring(start + 1, current - 1);
+        addToken(TokenType.STRING, text);
+    }
+
     private void addToken(TokenType type) {
         addToken(type, null);
     }
@@ -98,6 +118,8 @@ class Scanner {
             }
             case '\n' ->
                 line++;
+            case '"' ->
+                string();
             default ->
                 Main.error(line, "Unexpected character: " + c);
         }

@@ -19,5 +19,6 @@ enum TokenType {
     GREATER,
     GREATER_EQUAL,
     SLASH,
+    STRING,
     EOF,
 }
