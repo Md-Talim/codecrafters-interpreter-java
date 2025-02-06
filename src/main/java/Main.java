@@ -1,9 +1,19 @@
 
+import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Main {
+
+    private static void run(String source) {
+        Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
+
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
+    }
 
     public static void main(String[] args) {
         if (args.length < 2) {
@@ -22,15 +32,11 @@ public class Main {
         String fileContents = "";
         try {
             fileContents = Files.readString(Path.of(filename));
+            run(fileContents);
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
             System.exit(1);
         }
 
-        if (fileContents.length() > 0) {
-            throw new RuntimeException("Scanner not implemented");
-        } else {
-            System.out.println("EOF  null"); // Placeholder, remove this line when implementing the scanner
-        }
     }
 }
