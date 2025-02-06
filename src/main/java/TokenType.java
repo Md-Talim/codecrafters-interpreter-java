@@ -21,5 +21,6 @@ enum TokenType {
     SLASH,
     STRING,
     NUMBER,
+    IDENTIFIER,
     EOF,
 }

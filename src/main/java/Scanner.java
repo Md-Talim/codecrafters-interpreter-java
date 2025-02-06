@@ -21,6 +21,14 @@ class Scanner {
         return c >= '0' && c <= '9';
     }
 
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+    }
+
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
+
     private char advance() {
         return source.charAt(current++);
     }
@@ -95,6 +103,14 @@ class Scanner {
         addToken(TokenType.NUMBER, Double.valueOf(number));
     }
 
+    private void identifier() {
+        while (isAlphaNumeric(peek())) {
+            advance();
+        }
+
+        addToken(TokenType.IDENTIFIER);
+    }
+
     private void addToken(TokenType type) {
         addToken(type, null);
     }
@@ -152,6 +168,8 @@ class Scanner {
             default -> {
                 if (isDigit(c)) {
                     number();
+                } else if (isAlpha(c)) {
+                    identifier();
                 } else {
                     Main.error(line, "Unexpected character: " + c);
                 }
