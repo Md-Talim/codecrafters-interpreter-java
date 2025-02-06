@@ -40,6 +40,12 @@ class Scanner {
         return source.charAt(current);
     }
 
+    private void comment() {
+        while (peek() != '\n' && !isAtEnd()) {
+            advance();
+        }
+    }
+
     private void addToken(TokenType type) {
         addToken(type, null);
     }
@@ -82,6 +88,13 @@ class Scanner {
                 addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
             case '>' ->
                 addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+            case '/' -> {
+                if (match('/')) {
+                    comment();
+                } else {
+                    addToken(TokenType.SLASH);
+                }
+            }
             default ->
                 Main.error(line, "Unexpected character: " + c);
         }
