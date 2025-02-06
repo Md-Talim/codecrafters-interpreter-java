@@ -21,6 +21,25 @@ class Scanner {
         return source.charAt(current++);
     }
 
+    private boolean match(char expected) {
+        if (isAtEnd()) {
+            return false;
+        }
+        if (source.charAt(current) != expected) {
+            return false;
+        }
+
+        current++;
+        return true;
+    }
+
+    private char peek() {
+        if (isAtEnd()) {
+            return '\0';
+        }
+        return source.charAt(current);
+    }
+
     private void addToken(TokenType type) {
         addToken(type, null);
     }
@@ -34,6 +53,7 @@ class Scanner {
         char c = advance();
 
         switch (c) {
+            // Single character tokens
             case '(' ->
                 addToken(TokenType.LEFT_PAREN);
             case ')' ->
@@ -54,6 +74,8 @@ class Scanner {
                 addToken(TokenType.SEMICOLON);
             case '*' ->
                 addToken(TokenType.STAR);
+            case '=' ->
+                addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
             default ->
                 Main.error(line, "Unexpected character: " + c);
         }

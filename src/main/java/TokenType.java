@@ -10,5 +10,7 @@ enum TokenType {
     PLUS,
     MINUS,
     STAR,
+    EQUAL,
+    EQUAL_EQUAL,
     EOF,
 }
