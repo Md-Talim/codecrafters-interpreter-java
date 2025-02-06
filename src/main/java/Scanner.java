@@ -54,6 +54,8 @@ class Scanner {
                 addToken(TokenType.SEMICOLON);
             case '*' ->
                 addToken(TokenType.STAR);
+            default ->
+                Main.error(line, "Unexpected character: " + c);
         }
     }
 
