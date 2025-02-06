@@ -59,7 +59,6 @@ class Scanner {
         char c = advance();
 
         switch (c) {
-            // Single character tokens
             case '(' ->
                 addToken(TokenType.LEFT_PAREN);
             case ')' ->
@@ -94,6 +93,8 @@ class Scanner {
                 } else {
                     addToken(TokenType.SLASH);
                 }
+            }
+            case ' ', '\r', '\t' -> {
             }
             default ->
                 Main.error(line, "Unexpected character: " + c);
