@@ -76,6 +76,8 @@ class Scanner {
                 addToken(TokenType.STAR);
             case '=' ->
                 addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+            case '!' ->
+                addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
             default ->
                 Main.error(line, "Unexpected character: " + c);
         }
