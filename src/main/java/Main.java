@@ -1,8 +1,8 @@
 
-import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class Main {
 
@@ -13,13 +13,17 @@ public class Main {
         hadError = true;
     }
 
-    private static void run(String source) {
-        Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
-
+    private static void tokenize(List<Token> tokens) {
         for (Token token : tokens) {
             System.out.println(token);
         }
+    }
+
+    private static void parse(List<Token> tokens) {
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+
+        System.out.println(new AstPrinter().print(expression));
     }
 
     public static void main(String[] args) {
@@ -31,15 +35,17 @@ public class Main {
         String command = args[0];
         String filename = args[1];
 
-        if (!command.equals("tokenize")) {
-            System.err.println("Unknown command: " + command);
-            System.exit(1);
-        }
-
         String fileContents = "";
         try {
             fileContents = Files.readString(Path.of(filename));
-            run(fileContents);
+            Scanner scanner = new Scanner(fileContents);
+            List<Token> tokens = scanner.scanTokens();
+
+            switch (command) {
+                case "tokenize" ->
+                    tokenize(tokens);
+                case "parse" -> parse(tokens);
+            }
 
             if (hadError) {
                 System.exit(65);
