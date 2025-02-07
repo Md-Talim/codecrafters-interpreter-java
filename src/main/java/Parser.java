@@ -61,6 +61,15 @@ class Parser {
         if (match(TokenType.NUMBER, TokenType.STRING))
             return new Expr.Literal(previous().literal);
 
+        if (match(TokenType.LEFT_PAREN)) {
+            Expr expr = primary();
+            if (check(TokenType.RIGHT_PAREN)) {
+                advance();
+                return new Expr.Grouping(expr);
+            }
+            throw error("Expected ')' after expression.");
+        }
+
         throw error("Unexpected literal");
     }
 
