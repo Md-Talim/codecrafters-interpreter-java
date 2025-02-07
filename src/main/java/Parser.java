@@ -58,6 +58,9 @@ class Parser {
         if (match(TokenType.NIL))
             return new Expr.Literal(null);
 
+        if (match(TokenType.NUMBER))
+            return new Expr.Literal(previous().literal);
+
         throw error("Unexpected literal");
     }
 
