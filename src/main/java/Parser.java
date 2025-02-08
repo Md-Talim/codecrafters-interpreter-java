@@ -95,8 +95,20 @@ class Parser {
         return expr;
     }
 
+    private Expr term() {
+        Expr expr = factor();
+
+        while (match(TokenType.PLUS, TokenType.MINUS)) {
+            Token operator = previous();
+            Expr right = factor();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
     private Expr expression() {
-        return factor();
+        return term();
     }
 
     Expr parse() {
