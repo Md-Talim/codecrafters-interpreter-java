@@ -107,8 +107,20 @@ class Parser {
         return expr;
     }
 
+    private Expr comparison() {
+        Expr expr = term();
+
+        while (match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
+            Token operator = previous();
+            Expr right = term();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
     private Expr expression() {
-        return term();
+        return comparison();
     }
 
     Expr parse() {
