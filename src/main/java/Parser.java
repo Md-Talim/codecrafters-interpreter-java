@@ -45,9 +45,15 @@ class Parser {
         return false;
     }
 
-    private ParseError error(String message) {
-        Main.error(peek().line, message);
+    private ParseError error(Token token, String message) {
+        Main.error(token, message);
         throw new ParseError();
+    }
+
+    private Token consume(TokenType type, String errorMessage) {
+        if (check(type))
+            return advance();
+        throw error(peek(), errorMessage);
     }
 
     private Expr primary() {
@@ -63,14 +69,11 @@ class Parser {
 
         if (match(TokenType.LEFT_PAREN)) {
             Expr expr = expression();
-            if (check(TokenType.RIGHT_PAREN)) {
-                advance();
-                return new Expr.Grouping(expr);
-            }
-            throw error("Expected ')' after expression.");
+            consume(TokenType.RIGHT_PAREN, "Expected ')' after expression.");
+            return new Expr.Grouping(expr);
         }
 
-        throw error("Unexpected literal");
+        throw error(peek(), "Expect expression.");
     }
 
     private Expr unary() {
@@ -136,6 +139,10 @@ class Parser {
     }
 
     Expr parse() {
-        return expression();
+        try {
+            return expression();
+        } catch (ParseError error) {
+            return null;
+        }
     }
 }
