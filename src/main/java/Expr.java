@@ -5,6 +5,8 @@ abstract class Expr {
         R visitGroupingExpr(Grouping expr);
 
         R visitUnaryExpr(Unary expr);
+
+        R visitBinaryExpr(Binary expr);
     }
 
     static class Literal extends Expr {
@@ -45,6 +47,23 @@ abstract class Expr {
         @Override
         <R> R accept(Expr.Visitor<R> visitor) {
             return visitor.visitUnaryExpr(this);
+        }
+    }
+
+    static class Binary extends Expr {
+        final Expr left;
+        final Token operator;
+        final Expr right;
+
+        Binary(Expr left, Token operator, Expr right) {
+            this.left = left;
+            this.operator = operator;
+            this.right = right;
+        }
+
+        @Override
+        <R> R accept(Expr.Visitor<R> visitor) {
+            return visitor.visitBinaryExpr(this);
         }
     }
 

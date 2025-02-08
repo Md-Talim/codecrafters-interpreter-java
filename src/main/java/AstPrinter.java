@@ -33,4 +33,8 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
+
+    public String visitBinaryExpr(Expr.Binary expr) {
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+    }
 }
