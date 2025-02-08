@@ -119,8 +119,20 @@ class Parser {
         return expr;
     }
 
+    private Expr equality() {
+        Expr expr = comparison();
+
+        while (match(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
+            Token operator = previous();
+            Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
     private Expr expression() {
-        return comparison();
+        return equality();
     }
 
     Expr parse() {
