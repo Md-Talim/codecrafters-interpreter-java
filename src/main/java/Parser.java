@@ -62,7 +62,7 @@ class Parser {
             return new Expr.Literal(previous().literal);
 
         if (match(TokenType.LEFT_PAREN)) {
-            Expr expr = primary();
+            Expr expr = expression();
             if (check(TokenType.RIGHT_PAREN)) {
                 advance();
                 return new Expr.Grouping(expr);
@@ -73,7 +73,21 @@ class Parser {
         throw error("Unexpected literal");
     }
 
-    Expr parse() {
+    private Expr unary() {
+        if (match(TokenType.BANG, TokenType.MINUS)) {
+            Token operator = previous();
+            Expr right = unary();
+            return new Expr.Unary(operator, right);
+        }
+
         return primary();
+    }
+
+    private Expr expression() {
+        return unary();
+    }
+
+    Expr parse() {
+        return expression();
     }
 }

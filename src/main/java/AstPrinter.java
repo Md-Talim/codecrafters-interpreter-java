@@ -29,4 +29,8 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitGroupingExpr(Expr.Grouping expr) {
         return parenthesize("group", expr.expression);
     }
+
+    public String visitUnaryExpr(Expr.Unary expr) {
+        return parenthesize(expr.operator.lexeme, expr.right);
+    }
 }

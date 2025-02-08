@@ -3,6 +3,8 @@ abstract class Expr {
         R visitLiteralExpr(Literal expr);
 
         R visitGroupingExpr(Grouping expr);
+
+        R visitUnaryExpr(Unary expr);
     }
 
     static class Literal extends Expr {
@@ -28,6 +30,21 @@ abstract class Expr {
         @Override
         <R> R accept(Expr.Visitor<R> visitor) {
             return visitor.visitGroupingExpr(this);
+        }
+    }
+
+    static class Unary extends Expr {
+        final Token operator;
+        final Expr right;
+
+        Unary(Token operator, Expr right) {
+            this.operator = operator;
+            this.right = right;
+        }
+
+        @Override
+        <R> R accept(Expr.Visitor<R> visitor) {
+            return visitor.visitUnaryExpr(this);
         }
     }
 
