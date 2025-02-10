@@ -25,8 +25,7 @@ class Interpreter implements Expr.Visitor<Object> {
 
     @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitGroupingExpr'");
+        return evaluate(expr.expression);
     }
 
     @Override
