@@ -18,6 +18,14 @@ class Interpreter implements Expr.Visitor<Object> {
         return object.toString();
     }
 
+    private boolean isTruthy(Object object) {
+        if (object == null)
+            return false;
+        if (object instanceof Boolean)
+            return (boolean) object;
+        return true;
+    }
+
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
         return expr.value;
@@ -30,8 +38,16 @@ class Interpreter implements Expr.Visitor<Object> {
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitUnaryExpr'");
+        Object right = evaluate(expr.right);
+
+        switch (expr.operator.type) {
+            case BANG:
+                return !isTruthy(right);
+            case MINUS:
+                return -(double) right;
+            default:
+                return null;
+        }
     }
 
     @Override
