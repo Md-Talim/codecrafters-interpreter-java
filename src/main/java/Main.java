@@ -38,6 +38,14 @@ public class Main {
         System.out.println(new AstPrinter().print(expression));
     }
 
+    private static void evaluate(List<Token> tokens) {
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpret(expression);
+    }
+
     public static void main(String[] args) {
         if (args.length < 2) {
             System.err.println("Usage: ./your_program.sh tokenize <filename>");
@@ -57,6 +65,7 @@ public class Main {
                 case "tokenize" ->
                     tokenize(tokens);
                 case "parse" -> parse(tokens);
+                case "evaluate" -> evaluate(tokens);
             }
 
             if (hadError) {
