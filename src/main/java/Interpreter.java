@@ -52,8 +52,17 @@ class Interpreter implements Expr.Visitor<Object> {
 
     @Override
     public Object visitBinaryExpr(Expr.Binary expr) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitBinaryExpr'");
+        Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+
+        switch (expr.operator.type) {
+            case STAR:
+                return (double) left * (double) right;
+            case SLASH:
+                return (double) left / (double) right;
+            default:
+                return null;
+        }
     }
 
     void interpret(Expr expression) {
