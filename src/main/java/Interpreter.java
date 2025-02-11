@@ -60,6 +60,10 @@ class Interpreter implements Expr.Visitor<Object> {
                 return (double) left * (double) right;
             case SLASH:
                 return (double) left / (double) right;
+            case MINUS:
+                return (double) left - (double) right;
+            case PLUS:
+                return (double) left + (double) right;
             default:
                 return null;
         }
