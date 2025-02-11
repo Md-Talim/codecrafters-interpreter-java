@@ -26,6 +26,15 @@ class Interpreter implements Expr.Visitor<Object> {
         return true;
     }
 
+    private boolean isEqual(Object left, Object right) {
+        if (left == null && right == null)
+            return true;
+        if (left == null)
+            return false;
+
+        return left.equals(right);
+    }
+
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
         return expr.value;
@@ -75,6 +84,10 @@ class Interpreter implements Expr.Visitor<Object> {
                 return (double) left < (double) right;
             case LESS_EQUAL:
                 return (double) left <= (double) right;
+            case EQUAL_EQUAL:
+                return isEqual(left, right);
+            case BANG_EQUAL:
+                return !isEqual(left, right);
             default:
                 return null;
         }
