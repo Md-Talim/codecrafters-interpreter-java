@@ -63,7 +63,10 @@ class Interpreter implements Expr.Visitor<Object> {
             case MINUS:
                 return (double) left - (double) right;
             case PLUS:
-                return (double) left + (double) right;
+                if (left instanceof Double && right instanceof Double)
+                    return (double) left + (double) right;
+                if (left instanceof String && right instanceof String)
+                    return (String) left + (String) right;
             default:
                 return null;
         }
