@@ -7,6 +7,7 @@ import java.util.List;
 public class Main {
 
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
 
     static void report(int line, String where, String message) {
         System.err.printf("[line %d] Error%s: %s\n", line, where, message);
@@ -23,6 +24,11 @@ public class Main {
         } else {
             report(token.line, " at '" + token.lexeme + "'", message);
         }
+    }
+
+    static void runtimeError(RuntimeError error) {
+        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 
     private static void tokenize(List<Token> tokens) {
@@ -70,6 +76,10 @@ public class Main {
 
             if (hadError) {
                 System.exit(65);
+            }
+
+            if (hadRuntimeError) {
+                System.exit(70);
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
