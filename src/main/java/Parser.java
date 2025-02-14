@@ -145,9 +145,18 @@ class Parser {
         return new Stmt.Print(value);
     }
 
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
     private Stmt statement() {
-        match(TokenType.PRINT);
-        return printStatement();
+        if (match(TokenType.PRINT)) {
+            return printStatement();
+        }
+
+        return expressionStatement();
     }
 
     Expr parse() {

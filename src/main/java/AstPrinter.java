@@ -38,6 +38,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return parenthesize("print", stmt.expression);
     }
 
+    @Override
+    public String visitExpressionStmt(Stmt.Expression stmt) {
+        return parenthesize(";", stmt.expression);
+    }
+
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
