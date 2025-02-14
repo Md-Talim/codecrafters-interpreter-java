@@ -74,6 +74,10 @@ class Parser {
             return new Expr.Grouping(expr);
         }
 
+        if (match(TokenType.IDENTIFIER)) {
+            return new Expr.Variable(previous());
+        }
+
         throw error(peek(), "Expect expression.");
     }
 
@@ -159,6 +163,26 @@ class Parser {
         return expressionStatement();
     }
 
+    private Stmt varDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(TokenType.EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt declaration() {
+        if (match(TokenType.VAR)) {
+            return varDeclaration();
+        }
+
+        return statement();
+    }
+
     Expr parse() {
         try {
             return expression();
@@ -172,7 +196,7 @@ class Parser {
 
         try {
             while (!isAtEnd()) {
-                statements.add(statement());
+                statements.add(declaration());
             }
         } catch (ParseError error) {
             return statements;

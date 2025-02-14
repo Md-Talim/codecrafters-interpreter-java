@@ -1,3 +1,5 @@
+import java.util.List;
+
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     String print(Expr expr) {
         if (expr == null) {
@@ -19,6 +21,33 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return builder.toString();
     }
 
+    private String parenthesize2(String name, Object... parts) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(").append(name);
+        transform(builder, parts);
+        builder.append(")");
+
+        return builder.toString();
+    }
+
+    private void transform(StringBuilder builder, Object... parts) {
+        for (Object part : parts) {
+            builder.append(" ");
+            if (part instanceof Expr) {
+                builder.append(((Expr) part).accept(this));
+            } else if (part instanceof Stmt) {
+                builder.append(((Stmt) part).accept(this));
+            } else if (part instanceof Token) {
+                builder.append(((Token) part).lexeme);
+            } else if (part instanceof List) {
+                transform(builder, ((List<?>) part).toArray());
+            } else {
+                builder.append(part);
+            }
+        }
+    }
+
     @Override
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value == null) {
@@ -34,6 +63,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
     public String visitPrintStmt(Stmt.Print stmt) {
         return parenthesize("print", stmt.expression);
     }
@@ -41,6 +75,15 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         return parenthesize(";", stmt.expression);
+    }
+
+    @Override
+    public String visitVarStmt(Stmt.Var stmt) {
+        if (stmt.initializer == null) {
+            return parenthesize2("var", stmt.name);
+        }
+
+        return parenthesize2("var", stmt.name, "=", stmt.initializer);
     }
 
     public String visitUnaryExpr(Expr.Unary expr) {
