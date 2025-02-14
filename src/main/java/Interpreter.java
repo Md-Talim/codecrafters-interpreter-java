@@ -1,6 +1,12 @@
-class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
     }
 
     private String stringify(Object object) {
@@ -114,10 +120,27 @@ class Interpreter implements Expr.Visitor<Object> {
         }
     }
 
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
     void interpret(Expr expression) {
         try {
             Object object = evaluate(expression);
             System.out.println(stringify(object));
+        } catch (RuntimeError error) {
+            Main.runtimeError(error);
+        }
+    }
+
+    void run(List<Stmt> statements) {
+        try {
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Main.runtimeError(error);
         }

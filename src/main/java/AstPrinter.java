@@ -1,4 +1,4 @@
-class AstPrinter implements Expr.Visitor<String> {
+class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     String print(Expr expr) {
         if (expr == null) {
             return "";
@@ -31,6 +31,11 @@ class AstPrinter implements Expr.Visitor<String> {
     @Override
     public String visitGroupingExpr(Expr.Grouping expr) {
         return parenthesize("group", expr.expression);
+    }
+
+    @Override
+    public String visitPrintStmt(Stmt.Print stmt) {
+        return parenthesize("print", stmt.expression);
     }
 
     public String visitUnaryExpr(Expr.Unary expr) {

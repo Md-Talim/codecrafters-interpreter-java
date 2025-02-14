@@ -52,6 +52,14 @@ public class Main {
         interpreter.interpret(expression);
     }
 
+    private static void run(List<Token> tokens) {
+        Parser parser = new Parser(tokens);
+        List<Stmt> statements = parser.getStatements();
+
+        Interpreter interpreter = new Interpreter();
+        interpreter.run(statements);
+    }
+
     public static void main(String[] args) {
         if (args.length < 2) {
             System.err.println("Usage: ./your_program.sh tokenize <filename>");
@@ -68,10 +76,10 @@ public class Main {
             List<Token> tokens = scanner.scanTokens();
 
             switch (command) {
-                case "tokenize" ->
-                    tokenize(tokens);
+                case "tokenize" -> tokenize(tokens);
                 case "parse" -> parse(tokens);
                 case "evaluate" -> evaluate(tokens);
+                case "run" -> run(tokens);
             }
 
             if (hadError) {

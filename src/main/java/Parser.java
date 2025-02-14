@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 class Parser {
@@ -138,11 +139,36 @@ class Parser {
         return equality();
     }
 
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt statement() {
+        match(TokenType.PRINT);
+        return printStatement();
+    }
+
     Expr parse() {
         try {
             return expression();
         } catch (ParseError error) {
             return null;
         }
+    }
+
+    List<Stmt> getStatements() {
+        List<Stmt> statements = new ArrayList<>();
+
+        try {
+            while (!isAtEnd()) {
+                statements.add(statement());
+            }
+        } catch (ParseError error) {
+            return statements;
+        }
+
+        return statements;
     }
 }
