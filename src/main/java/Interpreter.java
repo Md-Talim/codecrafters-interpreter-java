@@ -159,6 +159,18 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    void executeBlock(List<Stmt> statements) {
+        for (Stmt statement : statements) {
+            execute(statement);
+        }
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements);
+        return null;
+    }
+
     void interpret(Expr expression) {
         try {
             Object object = evaluate(expression);
