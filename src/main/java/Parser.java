@@ -190,8 +190,12 @@ class Parser {
         consume(TokenType.RIGHT_PAREN, "Expect ')' after 'if'.");
 
         Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(TokenType.ELSE)) {
+            elseBranch = statement();
+        }
 
-        return new Stmt.If(condition, thenBranch);
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Stmt statement() {
