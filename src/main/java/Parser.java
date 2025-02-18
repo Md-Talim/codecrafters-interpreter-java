@@ -139,8 +139,20 @@ class Parser {
         return expr;
     }
 
-    private Expr assignment() {
+    private Expr or() {
         Expr expr = equality();
+
+        while (match(TokenType.OR)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr assignment() {
+        Expr expr = or();
 
         if (match(TokenType.EQUAL)) {
             Token equals = previous();
