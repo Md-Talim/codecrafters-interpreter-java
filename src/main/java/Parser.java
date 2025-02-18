@@ -139,12 +139,24 @@ class Parser {
         return expr;
     }
 
-    private Expr or() {
+    private Expr and() {
         Expr expr = equality();
+
+        while (match(TokenType.AND)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr or() {
+        Expr expr = and();
 
         while (match(TokenType.OR)) {
             Token operator = previous();
-            Expr right = equality();
+            Expr right = and();
             expr = new Expr.Logical(expr, operator, right);
         }
 
