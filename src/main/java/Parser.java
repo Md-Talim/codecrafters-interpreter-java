@@ -184,7 +184,21 @@ class Parser {
         return statements;
     }
 
+    private Stmt ifStatement() {
+        consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+        Expr condition = expression();
+        consume(TokenType.RIGHT_PAREN, "Expect ')' after 'if'.");
+
+        Stmt thenBranch = statement();
+
+        return new Stmt.If(condition, thenBranch);
+    }
+
     private Stmt statement() {
+        if (match(TokenType.IF)) {
+            return ifStatement();
+        }
+
         if (match(TokenType.PRINT)) {
             return printStatement();
         }
