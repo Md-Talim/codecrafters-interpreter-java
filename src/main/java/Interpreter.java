@@ -1,7 +1,28 @@
+import java.util.ArrayList;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    Environment environment = new Environment();
+    Environment globals = new Environment();
+    Environment environment = globals;
+
+    Interpreter() {
+        globals.define("clock", new Callable() {
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis() / 1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn>";
+            }
+        });
+    }
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
@@ -123,6 +144,28 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+
+        List<Object> arguments = new ArrayList<>();
+        for (Expr argument : expr.arguments) {
+            arguments.add(evaluate(argument));
+        }
+
+        if (!(callee instanceof Callable)) {
+            throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+        }
+
+        Callable function = (Callable) callee;
+        if (arguments.size() != function.arity()) {
+            throw new RuntimeError(expr.paren,
+                    "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");
+        }
+
+        return function.call(this, arguments);
+    }
+
+    @Override
     public Object visitVariableExpr(Expr.Variable expr) {
         return environment.get(expr.name);
     }
@@ -195,6 +238,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         while (isTruthy(evaluate(stmt.condition))) {
             execute(stmt.body);
         }
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        Function function = new Function(stmt);
+        environment.define(stmt.name.lexeme, function);
         return null;
     }
 

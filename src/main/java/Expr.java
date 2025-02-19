@@ -1,3 +1,5 @@
+import java.util.List;
+
 abstract class Expr {
     interface Visitor<R> {
         R visitLiteralExpr(Literal expr);
@@ -13,6 +15,8 @@ abstract class Expr {
         R visitAssignExpr(Assign expr);
 
         R visitLogicalExpr(Logical expr);
+
+        R visitCallExpr(Call expr);
     }
 
     static class Literal extends Expr {
@@ -115,6 +119,23 @@ abstract class Expr {
         @Override
         <R> R accept(Expr.Visitor<R> visitor) {
             return visitor.visitLogicalExpr(this);
+        }
+    }
+
+    static class Call extends Expr {
+        final Expr callee;
+        final Token paren;
+        final List<Expr> arguments;
+
+        Call(Expr callee, Token paren, List<Expr> arguments) {
+            this.callee = callee;
+            this.paren = paren;
+            this.arguments = arguments;
+        }
+
+        @Override
+        <R> R accept(Expr.Visitor<R> visitor) {
+            return visitor.visitCallExpr(this);
         }
     }
 
