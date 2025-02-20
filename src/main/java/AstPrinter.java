@@ -129,7 +129,8 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         builder.append("(fun " + stmt.name.lexeme + "(");
 
         for (Token param : stmt.params) {
-            if (param != stmt.params.get(0)) builder.append(" ");
+            if (param != stmt.params.get(0))
+                builder.append(" ");
             builder.append(param.lexeme);
         }
 
@@ -141,6 +142,13 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         builder.append(")");
         return builder.toString();
+    }
+
+    @Override
+    public String visitReturnStmt(Stmt.Return stmt) {
+        if (stmt.value == null)
+            return "(return)";
+        return parenthesize("return", stmt.value);
     }
 
     @Override

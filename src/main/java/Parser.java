@@ -302,6 +302,17 @@ class Parser {
         return body;
     }
 
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(TokenType.SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
+    }
+
     private Stmt statement() {
         if (match(TokenType.FOR))
             return forStatement();
@@ -311,6 +322,9 @@ class Parser {
 
         if (match(TokenType.PRINT))
             return printStatement();
+
+        if (match(TokenType.RETURN))
+            return returnStatement();
 
         if (match(TokenType.WHILE))
             return whileStatement();
