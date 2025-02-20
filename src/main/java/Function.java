@@ -2,8 +2,10 @@ import java.util.List;
 
 class Function implements Callable {
     private final Stmt.Function declaration;
+    private final Environment closure;
 
-    Function(Stmt.Function declaration) {
+    Function(Stmt.Function declaration, Environment closure) {
+        this.closure = closure;
         this.declaration = declaration;
     }
 
@@ -19,7 +21,7 @@ class Function implements Callable {
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
-        Environment environment = new Environment(interpreter.globals);
+        Environment environment = new Environment(closure);
         for (int i = 0; i < declaration.params.size(); i++) {
             environment.define(declaration.params.get(i).lexeme, arguments.get(i));
         }
