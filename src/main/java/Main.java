@@ -10,7 +10,7 @@ public class Main {
     static boolean hadRuntimeError = false;
 
     static void report(int line, String where, String message) {
-        System.err.printf("[line %d] Error%s: %s\n", line, where, message); 
+        System.err.printf("[line %d] Error%s: %s\n", line, where, message);
         hadError = true;
     }
 
@@ -57,6 +57,8 @@ public class Main {
         List<Stmt> statements = parser.getStatements();
 
         Interpreter interpreter = new Interpreter();
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
         interpreter.run(statements);
     }
 
