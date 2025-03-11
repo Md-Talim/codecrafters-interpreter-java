@@ -1,4 +1,6 @@
 *.jar
 target/
 .idea/
+.project
+.classpath
 test.lox
