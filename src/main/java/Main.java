@@ -59,6 +59,10 @@ public class Main {
         Interpreter interpreter = new Interpreter();
         Resolver resolver = new Resolver(interpreter);
         resolver.resolve(statements);
+        if (hadError) {
+            return;
+        }
+
         interpreter.run(statements);
     }
 
