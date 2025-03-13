@@ -1,5 +1,6 @@
 *.jar
 target/
+.settings/
 .idea/
 .project
 .classpath
