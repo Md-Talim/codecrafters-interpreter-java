@@ -1,50 +1,49 @@
 [![progress-banner](https://backend.codecrafters.io/progress/interpreter/45e2d240-e202-410b-8532-48b646ec6bcb)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
 
-This is a starting point for Java solutions to the
-["Build your own Interpreter" Challenge](https://app.codecrafters.io/courses/interpreter/overview).
+# Lox Interpreter
 
-This challenge follows the book
-[Crafting Interpreters](https://craftinginterpreters.com/) by Robert Nystrom.
+This project is a Java implementation of the Lox interpreter, built as part of the Codecrafters "Build your own Interpreter" challenge. The challenge follows the book [Crafting Interpreters](https://craftinginterpreters.com/) by Robert Nystrom.
 
-In this challenge you'll build an interpreter for
-[Lox](https://craftinginterpreters.com/the-lox-language.html), a simple
-scripting language. Along the way, you'll learn about tokenization, ASTs,
-tree-walk interpreters and more.
+## Overview
 
-Before starting this challenge, make sure you've read the "Welcome" part of the
-book that contains these chapters:
+Lox is a simple scripting language. This interpreter project covers various aspects of language implementation, including tokenization, parsing, and interpreting the abstract syntax tree (AST).
 
-- [Introduction](https://craftinginterpreters.com/introduction.html) (chapter 1)
-- [A Map of the Territory](https://craftinginterpreters.com/a-map-of-the-territory.html)
-  (chapter 2)
-- [The Lox Language](https://craftinginterpreters.com/the-lox-language.html)
-  (chapter 3)
+## Features
+- **Tokenization** – `Scanner` converts source code into tokens (keywords, identifiers, literals, operators).
+- **Parsing** – `Parser` converts tokens into an AST, handling expressions and statements.
+- **AST** – `Expr` and `Stmt` define the structure of Lox code.
+- **Interpretation** – `Interpreter` walks the AST to execute code (variables, functions, control flow).
+- **Error Handling** – Handles syntax and runtime errors.
+- **Environment & Scope** – `Environment` manages nested scopes for variables and functions.
+- **Function Calls** – `Function` supports parameter passing and return values.
+- **Native Functions** – Includes `clock` to return the current time.
 
-These chapters don't involve writing code, so they won't be covered in this
-challenge. This challenge will start from chapter 4,
-[Scanning](https://craftinginterpreters.com/scanning.html).
+## Usage
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
-
-# Passing the first stage
-
-The entry point for your program is in `src/main/java/Main.java`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
+### Running the Interpreter Locally
+To run the interpreter locally, use the `your_program.sh` script:
 
 ```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+your_program.sh run <filename>
 ```
 
-Time to move on to the next stage!
+### Commands
 
-# Stage 2 & beyond
+| Command               | Description                                          |
+| --------------------- | ---------------------------------------------------- |
+| `tokenize <filename>` | Tokenizes the source code and prints the tokens.     |
+| `parse <filename>`    | Parses the source code and prints the AST.           |
+| `evaluate <filename>` | Evaluates a single expression and prints the result. |
+| `run <filename>`      | Runs the entire Lox program.                         |
 
-Note: This section is for stages 2 and beyond.
 
-1. Ensure you have `mvn` installed locally
-2. Run `./your_program.sh` to run your program, which is implemented in
-   `src/main/java/Main.java`.
-3. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+### Example
+To run a Lox program:
+
+```sh
+your_program.sh run test.lox
+```
+
+## Acknowledgments
+- This project follows the book [Crafting Interpreters](https://craftinginterpreters.com/) by Robert Nystrom. Special thanks to Codecrafters for providing the challenge.
+- For more details, visit the [Codecrafters Challenge](https://app.codecrafters.io/courses/interpreter/overview) page.
