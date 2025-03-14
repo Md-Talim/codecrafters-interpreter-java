@@ -20,12 +20,21 @@ class Class implements Callable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Instance instance = new Instance(this);
+        Function initializer = findMethod("init");
+        if (initializer != null) {
+            initializer.bind(instance).call(interpreter, arguments);
+        }
+
         return instance;
     }
 
     @Override
     public int arity() {
-        return 0;
+        Function initializer = findMethod("init");
+        if (initializer == null)
+            return 0;
+
+        return initializer.arity();
     }
 
     @Override

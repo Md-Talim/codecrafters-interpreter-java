@@ -207,6 +207,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitThisExpr(Expr.This expr) {
         if (currentClass != ClassType.CLASS) {
             Main.error(expr.keyword, "Can't use 'this' outside of a class.");
+            return null;
         }
         resolveLocal(expr, expr.keyword);
         return null;

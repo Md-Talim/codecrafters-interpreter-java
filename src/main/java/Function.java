@@ -3,16 +3,18 @@ import java.util.List;
 class Function implements Callable {
     private final Stmt.Function declaration;
     private final Environment closure;
+    private final boolean isInitializer;
 
-    Function(Stmt.Function declaration, Environment closure) {
+    Function(Stmt.Function declaration, Environment closure, boolean isInitializer) {
         this.closure = closure;
         this.declaration = declaration;
+        this.isInitializer = isInitializer;
     }
 
     Function bind(Instance instance) {
         Environment environment = new Environment(closure);
         environment.define("this", instance);
-        return new Function(declaration, environment);
+        return new Function(declaration, environment, isInitializer);
     }
 
     @Override
@@ -38,6 +40,8 @@ class Function implements Callable {
             return returnValue.value;
         }
 
+        if (isInitializer)
+            return closure.getAt(0, "this");
         return null;
     }
 }
