@@ -8,6 +8,10 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return expr.accept(this);
     }
 
+    String print(Stmt stmt) {
+        return stmt.accept(this);
+    }
+
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
 
@@ -103,6 +107,19 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
         for (Stmt statement : stmt.statements) {
             builder.append(statement.accept(this));
+        }
+
+        builder.append(")");
+        return builder.toString();
+    }
+
+    @Override
+    public String visitClassStmt(Stmt.Class stmt) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(class" + stmt.name.lexeme);
+
+        for (Stmt.Function method : stmt.methods) {
+            builder.append(" < " + print(method));
         }
 
         builder.append(")");

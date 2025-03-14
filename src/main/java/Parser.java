@@ -84,7 +84,7 @@ class Parser {
 
     private Expr finishCall(Expr callee) {
         List<Expr> arguments = new ArrayList<>();
-        
+
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
                 if (arguments.size() >= 255) {
@@ -368,7 +368,25 @@ class Parser {
         return new Stmt.Function(name, parameters, body);
     }
 
+    private Stmt classDeclaration() {
+        Token name = consume(TokenType.IDENTIFIER, "Expect class name.");
+        consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new Stmt.Class(name, methods);
+    }
+
     private Stmt declaration() {
+        if (match(TokenType.CLASS)) {
+            return classDeclaration();
+        }
+
         if (match(TokenType.FUN)) {
             return function("function");
         }
