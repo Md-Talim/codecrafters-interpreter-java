@@ -65,6 +65,8 @@ class Parser {
             return new Expr.Literal(false);
         if (match(TokenType.NIL))
             return new Expr.Literal(null);
+        if (match(TokenType.THIS))
+            return new Expr.This(previous());
 
         if (match(TokenType.NUMBER, TokenType.STRING))
             return new Expr.Literal(previous().literal);
