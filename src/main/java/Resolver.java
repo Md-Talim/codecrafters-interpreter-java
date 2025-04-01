@@ -5,7 +5,7 @@ import java.util.Stack;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private enum ClassType {
-        NONE, CLASS
+        NONE, CLASS, SUBCLASS
     }
 
     private enum FunctionType {
@@ -102,6 +102,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             Main.error(stmt.superclass.name, "A class can't inherit from itself.");
         }
         if (stmt.superclass != null) {
+            currentClass = ClassType.SUBCLASS;
             resolve(stmt.superclass);
         }
 
@@ -132,6 +133,11 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitSuperExpr(Expr.Super expr) {
+        if (currentClass == ClassType.NONE) {
+            Main.error(expr.keyword, "Can't use 'super' outside of a class.");
+        } else if (currentClass != ClassType.SUBCLASS) {
+            Main.error(expr.keyword, "Can't use 'super' in a class with no superclass.");
+        }
         resolveLocal(expr, expr.keyword);
         return null;
     }
@@ -235,7 +241,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitThisExpr(Expr.This expr) {
-        if (currentClass != ClassType.CLASS) {
+        if (currentClass == ClassType.NONE) {
             Main.error(expr.keyword, "Can't use 'this' outside of a class.");
             return null;
         }
