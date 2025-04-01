@@ -3,10 +3,12 @@ import java.util.Map;
 
 class Class implements Callable {
     final String name;
+    final Class superclass;
     private final Map<String, Function> methods;
 
-    Class(String name, Map<String, Function> methods) {
+    Class(String name, Class superclass, Map<String, Function> methods) {
         this.name = name;
+        this.superclass = superclass;
         this.methods = methods;
     }
 
