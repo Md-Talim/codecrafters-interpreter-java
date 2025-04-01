@@ -279,7 +279,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (stmt.superclass != null) {
             superclass = evaluate(stmt.superclass);
             if (!(superclass instanceof Class)) {
-                Main.error(stmt.superclass.name, "Superclass must be a class.");
+                throw new RuntimeError(stmt.superclass.name, "Superclass must be a class.");
             }
         }
         environment.define(stmt.name.lexeme, null);
