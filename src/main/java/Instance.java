@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Instance {
-    private Class klass;
+    private final Class klass;
     private final Map<String, Object> fields = new HashMap<>();
 
     Instance(Class klass) {

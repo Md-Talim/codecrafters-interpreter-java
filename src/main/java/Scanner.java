@@ -100,7 +100,7 @@ class Scanner {
             return;
         }
 
-        // The closing ".
+        // The closing "."
         advance();
 
         String text = source.substring(start + 1, current - 1);
@@ -114,11 +114,10 @@ class Scanner {
 
         // Look for a fractional part.
         if (peek() == '.' && isDigit(peekNext())) {
-            // Consume the '.'
-            advance();
-            while (isDigit(peek())) {
+            do {
+                // The first time consumes the '.'
                 advance();
-            }
+            } while (isDigit(peek()));
         }
 
         String number = source.substring(start, current);

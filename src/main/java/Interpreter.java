@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private Environment globals = new Environment();
+    private final Environment globals = new Environment();
     private Environment environment = globals;
     private final Map<Expr, Integer> locals = new HashMap<>();
 
@@ -106,15 +106,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitUnaryExpr(Expr.Unary expr) {
         Object right = evaluate(expr.right);
 
-        switch (expr.operator.type) {
-            case BANG:
-                return !isTruthy(right);
-            case MINUS:
+        return switch (expr.operator.type) {
+            case BANG -> !isTruthy(right);
+            case MINUS -> {
                 checkNumberOperand(expr.operator, right);
-                return -(double) right;
-            default:
-                return null;
-        }
+                yield -(double) right;
+            }
+            default -> null;
+        };
     }
 
     @Override
@@ -136,7 +135,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (left instanceof Double && right instanceof Double)
                     return (double) left + (double) right;
                 if (left instanceof String && right instanceof String)
-                    return (String) left + (String) right;
+                    return left + (String) right;
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
             case GREATER:
                 checkNumberOperands(expr.operator, left, right);
@@ -168,11 +167,10 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             arguments.add(evaluate(argument));
         }
 
-        if (!(callee instanceof Callable)) {
+        if (!(callee instanceof Callable function)) {
             throw new RuntimeError(expr.paren, "Can only call functions and classes.");
         }
 
-        Callable function = (Callable) callee;
         if (arguments.size() != function.arity()) {
             throw new RuntimeError(expr.paren,
                     "Expected " + function.arity() + " arguments but got " + arguments.size() + ".");

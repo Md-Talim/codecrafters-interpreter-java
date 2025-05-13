@@ -75,9 +75,8 @@ public class Main {
         String command = args[0];
         String filename = args[1];
 
-        String fileContents = "";
         try {
-            fileContents = Files.readString(Path.of(filename));
+            String fileContents = Files.readString(Path.of(filename));
             Scanner scanner = new Scanner(fileContents);
             List<Token> tokens = scanner.scanTokens();
 
